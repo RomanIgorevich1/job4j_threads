@@ -7,8 +7,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
-
 
 public class Wget implements Runnable {
     private final String url;
@@ -30,23 +28,20 @@ public class Wget implements Runnable {
             byte[] dataBuffer = new byte[1024];
             int bytesRead;
             long downloadedSize = 0;
-            long sizeCheck = 0;
+            long timeStart = System.currentTimeMillis();
             while ((bytesRead = in.read(dataBuffer, 0, dataBuffer.length)) != -1) {
-                long timeStart = System.nanoTime();
                 out.write(dataBuffer, 0, bytesRead);
-                long finish = (System.nanoTime() - timeStart);
-                System.out.println("Read 1024 bytes : "  + finish + " nano");
-                long millis = TimeUnit.NANOSECONDS.toMillis((speed * 1000000L) - finish);
-                if (sizeCheck == 0) {
-                    sizeCheck = file.length();
-                } else {
-                    sizeCheck += (file.length() - (downloadedSize + sizeCheck));
-                }
-                if (sizeCheck > speed) {
-                    Thread.sleep(millis);
-                    sizeCheck -= speed;
+                System.out.println(file.length() + " file size");
+                if ((file.length() - downloadedSize) > 1000) {
+                    long finish = (System.currentTimeMillis() - timeStart);
+                    System.out.println(finish + " millis");
                     downloadedSize += speed;
+                    if (finish < 1000) {
+                        Thread.sleep(1000 - finish);
+                        System.out.println(finish + " sleep");
+                    }
                 }
+                System.out.println(downloadedSize);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
