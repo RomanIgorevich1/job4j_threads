@@ -31,17 +31,17 @@ public class Wget implements Runnable {
             long timeStart = System.currentTimeMillis();
             while ((bytesRead = in.read(dataBuffer, 0, dataBuffer.length)) != -1) {
                 out.write(dataBuffer, 0, bytesRead);
-                System.out.println(file.length() + " file size");
-                if ((file.length() - downloadedSize) > 1000) {
-                    long finish = (System.currentTimeMillis() - timeStart);
-                    System.out.println(finish + " millis");
-                    downloadedSize += speed;
-                    if (finish < 1000) {
+                downloadedSize += bytesRead;
+                if (downloadedSize >= speed) {
+                    long finish = System.currentTimeMillis() - timeStart;
+                    if (finish < speed) {
                         Thread.sleep(1000 - finish);
-                        System.out.println(finish + " sleep");
                     }
+                    System.out.printf("BytesRead: %s; Millis: %s; Sleep: %s; DownloadedSize: %s;%n", bytesRead,
+                            finish, finish, downloadedSize);
+                    downloadedSize = 0;
                 }
-                System.out.println(downloadedSize);
+
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
