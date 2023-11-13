@@ -37,11 +37,11 @@ public class Wget implements Runnable {
                     if (finish < speed) {
                         Thread.sleep(1000 - finish);
                     }
+                    timeStart = System.currentTimeMillis();
                     System.out.printf("BytesRead: %s; Millis: %s; Sleep: %s; DownloadedSize: %s;%n", bytesRead,
                             finish, finish, downloadedSize);
                     downloadedSize = 0;
                 }
-
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
