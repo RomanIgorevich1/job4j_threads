@@ -13,7 +13,7 @@ public class AccountStorage {
 
     public synchronized boolean add(Account account) {
         accounts.putIfAbsent(account.id(), new Account(account.id(), account.amount()));
-        return true;
+        return accounts.containsKey(account.id());
     }
 
     public synchronized boolean update(Account account) {
@@ -38,10 +38,16 @@ public class AccountStorage {
      * @return
      */
     public synchronized boolean transfer(int fromId, int toId, int amount) {
-        if (getById(fromId).get().amount() == 0 || getById(toId).get().amount() == 0) {
-            throw new IllegalArgumentException("No money to transfer");
+        Optional<Account> sender = getById(fromId);
+        Optional<Account> recipient = getById(toId);
+        if (sender.isPresent() && recipient.isPresent()) {
+            if (sender.get().amount() == 0 || recipient.get().amount() == 0) {
+                throw new IllegalArgumentException("No money to transfer");
+            }
+            update(new Account(sender.get().id(), sender.get().amount() - amount));
         }
-        update(new Account(getById(fromId).get().id(), getById(fromId).get().amount() - amount));
-        return update(new Account(getById(toId).get().id(), getById(toId).get().amount() + amount));
+        return recipient
+                .filter(account -> update(new Account(account.id(), account.amount() + amount)))
+                .isPresent();
     }
 }
