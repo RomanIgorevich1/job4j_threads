@@ -12,8 +12,7 @@ public class AccountStorage {
     private final HashMap<Integer, Account> accounts = new HashMap<>();
 
     public synchronized boolean add(Account account) {
-        accounts.putIfAbsent(account.id(), new Account(account.id(), account.amount()));
-        return accounts.containsKey(account.id());
+        return accounts.putIfAbsent(account.id(), account) == null;
     }
 
     public synchronized boolean update(Account account) {
@@ -40,14 +39,15 @@ public class AccountStorage {
     public synchronized boolean transfer(int fromId, int toId, int amount) {
         Optional<Account> sender = getById(fromId);
         Optional<Account> recipient = getById(toId);
-        if (sender.isPresent() && recipient.isPresent()) {
-            if (sender.get().amount() == 0 || recipient.get().amount() == 0) {
-                throw new IllegalArgumentException("No money to transfer");
-            }
+        boolean result = (sender.isPresent() && recipient.isPresent())
+                && (sender.get().amount() != 0 && recipient.get().amount() != 0);
+        if (result) {
             update(new Account(sender.get().id(), sender.get().amount() - amount));
+            update(new Account(recipient.get().id(), recipient.get().amount() + amount));
+
+        } else {
+            throw new IllegalArgumentException("No money to transfer");
         }
-        return recipient
-                .filter(account -> update(new Account(account.id(), account.amount() + amount)))
-                .isPresent();
+        return result;
     }
 }
