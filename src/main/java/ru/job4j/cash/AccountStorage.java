@@ -41,13 +41,11 @@ public class AccountStorage {
         Optional<Account> recipient = getById(toId);
         boolean result = (sender.isPresent() && recipient.isPresent())
                 && (sender.get().amount() != 0 && recipient.get().amount() != 0);
-        if (result) {
-            update(new Account(sender.get().id(), sender.get().amount() - amount));
-            update(new Account(recipient.get().id(), recipient.get().amount() + amount));
-
-        } else {
-            throw new IllegalArgumentException("No money to transfer");
+        if (!result) {
+            throw new IllegalArgumentException("No money to transfer or account does not exist");
         }
+        update(new Account(sender.get().id(), sender.get().amount() - amount));
+        update(new Account(recipient.get().id(), recipient.get().amount() + amount));
         return result;
     }
 }
