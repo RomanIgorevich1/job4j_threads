@@ -40,7 +40,7 @@ public class AccountStorage {
         Optional<Account> sender = getById(fromId);
         Optional<Account> recipient = getById(toId);
         boolean result = (sender.isPresent() && recipient.isPresent())
-                && (sender.get().amount() != 0 && recipient.get().amount() != 0);
+                && (sender.get().amount() >= amount);
         if (!result) {
             throw new IllegalArgumentException("No money to transfer or account does not exist");
         }
