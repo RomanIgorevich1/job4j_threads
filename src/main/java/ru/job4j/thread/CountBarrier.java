@@ -11,33 +11,24 @@ public class CountBarrier {
 
     public void count() {
         synchronized (monitor) {
-            while (count <= 5) {
-                System.out.println("Сейчас работает поток " + Thread.currentThread().getName());
+            while (count != total) {
                 count++;
             }
-            System.out.printf("Поток %s будет пробуждать нити, Count равен: %s%n", Thread.currentThread().getName(), count);
             notifyAll();
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
     }
 
     public void awaiting() {
         synchronized (monitor) {
-            while (count < 5) {
+            while (count != total) {
                 try {
-                    System.out.println("Ждем, count равен " + count + " задействован поток " + Thread.currentThread().getName());
                     wait();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }
-            System.out.printf("Поток %s  начал работу; TOTAL равен %s; COUNT равен %s%n",
-                    Thread.currentThread().getName(), total--, count--);
-            notifyAll();
+            total--;
+            count = 0;
         }
     }
 
