@@ -11,9 +11,7 @@ public class CountBarrier {
 
     public void count() {
         synchronized (monitor) {
-            while (count != total) {
-                count++;
-            }
+            count++;
             notifyAll();
         }
     }
@@ -27,8 +25,6 @@ public class CountBarrier {
                     Thread.currentThread().interrupt();
                 }
             }
-            total--;
-            count = 0;
         }
     }
 
@@ -36,13 +32,12 @@ public class CountBarrier {
         CountBarrier barrier = new CountBarrier(5);
         Thread first = new Thread(() -> {
             System.out.println("Начал работу поток " + Thread.currentThread().getName());
-            while (barrier.total != 0) {
                 barrier.awaiting();
-            }
+
         });
         Thread second = new Thread(() -> {
             System.out.println("Начал работу поток " + Thread.currentThread().getName());
-            while (barrier.total != 0) {
+            while (barrier.count != barrier.total) {
                 barrier.count();
             }
         });
