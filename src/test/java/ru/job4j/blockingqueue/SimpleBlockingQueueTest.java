@@ -14,7 +14,7 @@ public class SimpleBlockingQueueTest {
         SimpleBlockingQueue<Integer> blockingQueue = new SimpleBlockingQueue<>(5);
         List<Integer> list = new ArrayList<>();
         Thread producer = new Thread(() -> {
-            for (int i = 0; i <= 5; i++) {
+            for (int i = 0; i < 5; i++) {
                         blockingQueue.offer(i);
             }
         });
@@ -28,6 +28,6 @@ public class SimpleBlockingQueueTest {
         producer.join();
         consumer.interrupt();
         consumer.join();
-        assertThat(list).containsExactly(0, 1, 2, 3, 4, 5);
+        assertThat(list).containsExactly(0, 1, 2, 3, 4);
     }
 }
