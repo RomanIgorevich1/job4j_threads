@@ -16,13 +16,14 @@ public class ParallelSearch {
         });
         consumer.start();
         new Thread(() -> {
-            for (int index = 0; index != 3; index++) {
-                queue.offer(index);
-                try {
+            try {
+                for (int index = 0; index != 3; index++) {
+                    queue.offer(index);
                     Thread.sleep(500);
-                } catch (InterruptedException exception) {
-                    Thread.currentThread().interrupt();
                 }
+            } catch (InterruptedException exception) {
+                exception.printStackTrace();
+                Thread.currentThread().interrupt();
             }
             consumer.interrupt();
         }).start();
