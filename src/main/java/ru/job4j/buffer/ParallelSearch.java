@@ -3,13 +3,13 @@ package ru.job4j.buffer;
 import ru.job4j.blockingqueue.SimpleBlockingQueue;
 
 public class ParallelSearch {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args)  {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(5);
         final Thread consumer = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
                     System.out.println(queue.poll());
-                } catch (InterruptedException e) {
+                } catch (InterruptedException exception) {
                     Thread.currentThread().interrupt();
                 }
             }
