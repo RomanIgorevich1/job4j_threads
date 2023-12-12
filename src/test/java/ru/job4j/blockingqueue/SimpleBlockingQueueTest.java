@@ -23,7 +23,6 @@ public class SimpleBlockingQueueTest {
                     Thread.currentThread().interrupt();
                 }
             }
-
         });
         producer.start();
         Thread consumer = new Thread(() -> {
