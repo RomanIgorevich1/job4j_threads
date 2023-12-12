@@ -11,44 +11,28 @@ import java.util.Queue;
 public class SimpleBlockingQueue<T> {
     @GuardedBy("queue")
     private Queue<T> queue = new LinkedList<>();
-    int size;
+    private int size;
 
     public SimpleBlockingQueue(int size) {
         this.size = size;
     }
 
-    public Queue<T> getQueue() {
-        return queue;
-    }
-
-    public void offer(T value) {
+    public void offer(T value) throws InterruptedException {
         synchronized (queue) {
-            try {
-                while (queue.size() == size) {
-                    System.out.println("Сейчас работает поток " + Thread.currentThread().getName() + " Очередь заполнена");
-                    queue.wait();
-                }
-                queue.offer(value);
-                queue.notifyAll();
-                System.out.println("Есть свободные места " + queue);
-            } catch (InterruptedException exception) {
-                Thread.currentThread().interrupt();
+            while (queue.size() == size) {
+                queue.wait();
             }
+            queue.offer(value);
+            queue.notifyAll();
         }
     }
 
-    public T poll() {
+    public T poll() throws InterruptedException {
         synchronized (queue) {
-            try {
-                while (queue.isEmpty()) {
-                    System.out.println("Сейчас работает поток " + Thread.currentThread().getName() + " Нет данных ждем");
-                    queue.wait();
-                }
-                queue.notifyAll();
-                System.out.println("Забираем данные остаток: " + queue);
-            } catch (InterruptedException exception) {
-                Thread.currentThread().interrupt();
+            while (queue.isEmpty()) {
+                queue.wait();
             }
+            queue.notifyAll();
         }
         return queue.poll();
     }
