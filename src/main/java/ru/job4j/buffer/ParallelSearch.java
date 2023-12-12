@@ -3,7 +3,7 @@ package ru.job4j.buffer;
 import ru.job4j.blockingqueue.SimpleBlockingQueue;
 
 public class ParallelSearch {
-    public static void main(String[] args)  {
+    public static void main(String[] args) throws InterruptedException {
         SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(5);
         final Thread consumer = new Thread(() -> {
             while (!Thread.currentThread().isInterrupted()) {
@@ -15,17 +15,16 @@ public class ParallelSearch {
             }
         });
         consumer.start();
-        new Thread(() -> {
-            try {
-                for (int index = 0; index != 3; index++) {
+       new Thread(() -> {
+            for (int index = 0; index != 3; index++) {
+                try {
                     queue.offer(index);
-                    Thread.sleep(500);
+                    Thread.sleep(500); //производитель
+                } catch (InterruptedException exception) {
+                    Thread.currentThread().interrupt();
                 }
-            } catch (InterruptedException exception) {
-                exception.printStackTrace();
-                Thread.currentThread().interrupt();
             }
-            consumer.interrupt();
+           consumer.interrupt();
         }).start();
     }
 }
