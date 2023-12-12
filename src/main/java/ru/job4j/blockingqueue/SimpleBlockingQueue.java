@@ -23,7 +23,6 @@ public class SimpleBlockingQueue<T> {
             }
             queue.offer(value);
             notifyAll();
-
     }
 
     public synchronized T poll() throws InterruptedException {
@@ -33,5 +32,9 @@ public class SimpleBlockingQueue<T> {
         T result = queue.poll();
         notifyAll();
         return result;
+    }
+
+    public synchronized boolean isEmpty() {
+        return queue.isEmpty();
     }
 }
