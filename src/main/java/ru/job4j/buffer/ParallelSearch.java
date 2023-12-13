@@ -15,7 +15,7 @@ public class ParallelSearch {
             }
         });
         consumer.start();
-       new Thread(() -> {
+        Thread producer = new Thread(() -> {
             for (int index = 0; index != 3; index++) {
                 try {
                     queue.offer(index);
@@ -24,7 +24,10 @@ public class ParallelSearch {
                     Thread.currentThread().interrupt();
                 }
             }
-           consumer.interrupt();
-        }).start();
+        });
+        producer.start();
+        producer.join();
+        consumer.interrupt();
+        consumer.join();
     }
 }
