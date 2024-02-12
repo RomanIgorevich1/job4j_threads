@@ -25,7 +25,7 @@ public class Cache {
     }
 
     public void delete(int id) {
-        memory.remove(Optional.of(findById(id).get().id()).get());
+        memory.remove(id);
     }
 
     public Optional<Base> findById(int id) {
