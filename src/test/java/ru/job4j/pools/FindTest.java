@@ -18,20 +18,20 @@ public class FindTest {
     public void whenRecursiveSearch() {
         Integer[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         ForkJoinPool pool = new ForkJoinPool();
-        assertThat(pool.invoke(new Find<>(array, 0, array.length -1, 15))).isEqualTo(14);
+        assertThat(pool.invoke(new Find<>(array, 0, array.length - 1, 15))).isEqualTo(14);
     }
 
     @Test
     public void whenIndexNotFound() {
         Integer[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         ForkJoinPool pool = new ForkJoinPool();
-        assertThat(pool.invoke(new Find<>(array, 0, array.length -1, 22))).isEqualTo(-1);
+        assertThat(pool.invoke(new Find<>(array, 0, array.length - 1, 22))).isEqualTo(-1);
     }
 
     @Test
     public void whenDifferentDataTypes() {
         Integer[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         ForkJoinPool pool = new ForkJoinPool();
-        assertThat(pool.invoke(new Find<>(array, 0, array.length -1, new Object()))).isEqualTo(-1);
+        assertThat(pool.invoke(new Find<>(array, 0, array.length - 1, new Object()))).isEqualTo(-1);
     }
 }
