@@ -1,6 +1,5 @@
 package ru.job4j.pools;
 
-import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
@@ -21,7 +20,7 @@ public class Find<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from <= 10) {
-            return List.of(array).indexOf(findElement);
+            return findIndex(array, findElement);
         }
         int middle = (from + to) / 2;
         Find<T> leftSort = new Find<>(array, from, middle, findElement);
@@ -32,11 +31,18 @@ public class Find<T> extends RecursiveTask<Integer> {
         Integer right = rightSort.join();
         return Math.max(left, right);
     }
-    public static void main(String[] args) {
-       Integer[] array = new Integer[60];
-       for (int  i = 0; i < array.length; i++) {
-           array[i] = i;
-       }
-        System.out.println(new ForkJoinPool().invoke(new Find<>(array, 0, array.length - 1, 20)));
+
+    private int findIndex(T[] array, T element) {
+        int result = -1;
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == element) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+    public static <T> Integer search(T[] array, T element) {
+         return new ForkJoinPool().invoke(new Find<>(array, 0, array.length - 1, element));
     }
 }
