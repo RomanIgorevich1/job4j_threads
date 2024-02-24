@@ -20,7 +20,7 @@ public class Find<T> extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (to - from <= 10) {
-            return findIndex(array, findElement);
+            return findIndex();
         }
         int middle = (from + to) / 2;
         Find<T> leftSort = new Find<>(array, from, middle, findElement);
@@ -32,10 +32,10 @@ public class Find<T> extends RecursiveTask<Integer> {
         return Math.max(left, right);
     }
 
-    private int findIndex(T[] array, T element) {
+    private int findIndex() {
         int result = -1;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i] == element) {
+        for (int i = from; i < to; i++) {
+            if (findElement.equals(array[i])) {
                 result = i;
                 break;
             }
