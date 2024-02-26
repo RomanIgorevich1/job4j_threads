@@ -43,6 +43,6 @@ public class Find<T> extends RecursiveTask<Integer> {
         return result;
     }
     public static <T> Integer search(T[] array, T element) {
-         return new ForkJoinPool().invoke(new Find<>(array, 0, array.length - 1, element));
+         return new ForkJoinPool().invoke(new Find<>(array, 0, array.length, element));
     }
 }

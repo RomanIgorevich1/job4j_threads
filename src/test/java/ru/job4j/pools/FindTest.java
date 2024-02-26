@@ -27,4 +27,10 @@ public class FindTest {
         Integer[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
         assertThat(Find.search(array, new Object())).isEqualTo(-1);
     }
+
+    @Test
+    public void whenSearchLastElement() {
+        Integer[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 22};
+        assertThat(Find.search(array, 22)).isEqualTo(16);
+    }
 }
