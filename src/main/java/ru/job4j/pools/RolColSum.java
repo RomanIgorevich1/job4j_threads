@@ -4,35 +4,17 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class RolColSum {
-    public static class Sums {
-        private int rowSum;
-        private int colSum;
 
-        public int getRowSum() {
-            return rowSum;
-        }
-
-        public void setRowSum(int rowSum) {
-            this.rowSum = rowSum;
-        }
-
-        public int getColSum() {
-            return colSum;
-        }
-
-        public void setColSum(int colSum) {
-            this.colSum = colSum;
-        }
-    }
-
-    public static Sums[] sum(int[][] matrix) {
+    public static  Sums[] sum(int[][] matrix) {
         Sums[] sums = new Sums[matrix.length];
             for (int i = 0; i < matrix.length; i++) {
-                sums[i] = new Sums();
+                int resultRow = 0;
+                int resultCol = 0;
                 for (int k = 0; k < matrix.length; k++) {
-                    sums[i].rowSum += matrix[i][k];
-                    sums[i].colSum += matrix[k][i];
+                    resultRow += matrix[i][k];
+                    resultCol += matrix[k][i];
                 }
+                sums[i] = new Sums(resultRow, resultCol);
             }
         return sums;
     }
@@ -40,9 +22,7 @@ public class RolColSum {
     public static Sums[] asyncSum(int[][] matrix) throws ExecutionException, InterruptedException {
         Sums[] sums = new Sums[matrix.length];
         for (int i = 0; i < matrix.length; i++) {
-            sums[i] = new Sums();
-            sums[i].setRowSum(rowSum(matrix, i).get());
-            sums[i].setColSum(colSum(matrix, i).get());
+            sums[i] = new Sums(rowSum(matrix, i).get(), colSum(matrix, i).get());
         }
         return sums;
     }
